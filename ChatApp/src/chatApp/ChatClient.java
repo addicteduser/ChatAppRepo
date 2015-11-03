@@ -1,4 +1,4 @@
-package client;
+package chatApp;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,8 +13,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import chatApp.Driver;
 
 /**
  * A simple Swing-based client for the chat server.  Graphically
@@ -33,7 +31,6 @@ import chatApp.Driver;
  * this string should be displayed in its message area.
  */
 public class ChatClient {
-
     BufferedReader in;
     PrintWriter out;
     JFrame frame = new JFrame("Chatter");

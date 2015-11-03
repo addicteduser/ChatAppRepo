@@ -2,11 +2,8 @@ package chatApp;
 
 import java.io.IOException;
 
-import server.ChatServer;
-
 /**
  * SOURCE: http://cs.lmu.edu/~ray/notes/javanetexamples/#chat
- * @author addicteduser
  */
 public class Driver {
 	private final static String host = "localhost";
@@ -22,6 +19,7 @@ public class Driver {
 		}
 
 	}
+	
 	/**
 	 * @return the host
 	 */
