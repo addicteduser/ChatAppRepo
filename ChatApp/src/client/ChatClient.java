@@ -1,5 +1,7 @@
 package client;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -13,6 +15,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 import chatApp.Driver;
 
@@ -39,7 +46,10 @@ public class ChatClient {
     JFrame frame = new JFrame("Chatter");
     JTextField textField = new JTextField(40);
     JTextArea messageArea = new JTextArea(8, 40);
-
+    
+    JTextPane messagePane = new JTextPane();
+    Socket socket;
+    
     /**
      * Constructs the client by laying out the GUI and registering a
      * listener with the textfield so that pressing Return in the
@@ -53,8 +63,10 @@ public class ChatClient {
         // Layout GUI
         textField.setEditable(false);
         messageArea.setEditable(false);
+        messagePane.setEditable(false);
+        messagePane.setPreferredSize(new Dimension(100, 100));
         frame.getContentPane().add(textField, "North");
-        frame.getContentPane().add(new JScrollPane(messageArea), "Center");
+        frame.getContentPane().add(new JScrollPane(messagePane), "Center");
         frame.pack();
 
         // Add Listeners
@@ -69,6 +81,32 @@ public class ChatClient {
                 textField.setText("");
             }
         });
+    }
+    
+    public void close(){
+    	if(socket != null){
+			try {
+				socket.close();
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			}
+    	}
+    }
+    
+    private void appendToPane(JTextPane tp, String msg, Color c)
+    {
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+
+        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
+        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
+
+        int oldLen = tp.getDocument().getLength();
+        try{
+        	tp.getStyledDocument().insertString(oldLen, msg, aset);
+        } catch(Exception e){
+        	System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -86,21 +124,30 @@ public class ChatClient {
      * Connects to the server then enters the processing loop.
      */
     private void run() throws IOException {
-
         // Make connection and initialize streams
-        Socket socket = new Socket(Driver.getHost(), Driver.getPort());
+        socket = new Socket(Driver.getHost(), Driver.getPort());
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
 
         // Process all messages from server, according to the protocol.
         while (true) {
             String line = in.readLine();
+            
+            if(line == null)
+            	continue;
+            
             if (line.startsWith("SUBMITNAME")) {
                 out.println(getName());
             } else if (line.startsWith("NAMEACCEPTED")) {
                 textField.setEditable(true);
             } else if (line.startsWith("MESSAGE")) {
-                messageArea.append(line.substring(8) + "\n");
+            	appendToPane(messagePane, line.substring(8) + "\n", Color.BLACK);
+            } else if (line.startsWith("PRIVATEMESSAGESENDER")) {
+            	appendToPane(messagePane, line.substring(21) + "\n", Color.BLUE);
+            } else if (line.startsWith("PRIVATEMESSAGETARGET")) {
+            	appendToPane(messagePane, line.substring(21) + "\n", new Color(0 , 100, 0));	// Dark Green
+            } else if (line.startsWith("ERROR")) {
+            	appendToPane(messagePane, line.substring(6) + "\n", Color.RED);
             }
         }
     }
@@ -113,5 +160,14 @@ public class ChatClient {
         client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         client.frame.setVisible(true);
         client.run();
+        
+        Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+            @Override
+            public void run()
+            {
+            	client.close();
+            }
+        });
     }
 }
