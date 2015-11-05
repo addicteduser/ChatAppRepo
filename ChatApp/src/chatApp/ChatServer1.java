@@ -19,7 +19,7 @@ import java.util.HashSet;
  * have submitted a unique screen name. The broadcast messages
  * are prefixed with "MESSAGE".
  */
-public class ChatServer extends Thread {
+public class ChatServer1 extends Thread {
 	/**
 	 * Set of all clients. Checked to see if names are unique.
 	 */
@@ -29,7 +29,7 @@ public class ChatServer extends Thread {
 	 */
 	private static HashSet<PrintWriter> writers = new HashSet<PrintWriter>();
 
-	public ChatServer() throws IOException {
+	public ChatServer1() throws IOException {
 		System.out.println("[SERVER] The chat server is running.");
 		ServerSocket listener = new ServerSocket(Driver.getPort());
 

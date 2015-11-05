@@ -35,7 +35,7 @@ import javax.swing.ScrollPaneConstants;
  * line beginning with "MESSAGE " then all characters following
  * this string should be displayed in its message area.
  */
-public class ChatClient {
+public class ChatClient1 {
 	private static ChatClientUI c;
 	private BufferedReader in;
 	private PrintWriter out;
@@ -52,7 +52,7 @@ public class ChatClient {
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 */
-	public ChatClient() throws UnknownHostException, IOException {
+	public ChatClient1() throws UnknownHostException, IOException {
 		c = new ChatClientUI();
 		c.setVisible(true);
 		c.addInputTextAreaActionListener(new ActionListener() {
@@ -129,6 +129,6 @@ public class ChatClient {
 	 * Runs the client as an application with a closeable frame.
 	 */
 	public static void main(String[] args) throws Exception {
-		new ChatClient();
+		new ChatClient1();
 	}
 }

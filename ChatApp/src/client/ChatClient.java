@@ -49,6 +49,7 @@ public class ChatClient {
     
     JTextPane messagePane = new JTextPane();
     Socket socket;
+    String tempName;
     
     /**
      * Constructs the client by laying out the GUI and registering a
@@ -113,11 +114,12 @@ public class ChatClient {
      * Prompt for and return the desired screen name.
      */
     private String getName() {
-        return JOptionPane.showInputDialog(
-            frame,
-            "Choose a screen name:",
-            "Screen name selection",
-            JOptionPane.PLAIN_MESSAGE);
+    	tempName =  JOptionPane.showInputDialog(
+                frame,
+                "Choose a screen name:",
+                "Screen name selection",
+                JOptionPane.PLAIN_MESSAGE);
+        return tempName;
     }
 
     /**
@@ -140,6 +142,7 @@ public class ChatClient {
                 out.println(getName());
             } else if (line.startsWith("NAMEACCEPTED")) {
                 textField.setEditable(true);
+                frame.setTitle("Chatter   |   @"+tempName);
             } else if (line.startsWith("MESSAGE")) {
             	appendToPane(messagePane, line.substring(8) + "\n", Color.BLACK);
             } else if (line.startsWith("PRIVATEMESSAGESENDER")) {
@@ -156,7 +159,7 @@ public class ChatClient {
      * Runs the client as an application with a closeable frame.
      */
     public static void main(String[] args) throws Exception {
-        ChatClient client = new ChatClient();
+        final ChatClient client = new ChatClient();
         client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         client.frame.setVisible(true);
         client.run();
