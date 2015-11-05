@@ -145,9 +145,16 @@ public class ChatServer extends Thread {
 					return;
 				}
 				
+				// private message
+				if (input.startsWith("@")) {
+					out.println("PM|" + name + "|" + input);
+					// find writer corresponding to the name in @name
+					// print "PM "+
+				} else {
 				// broadcast message
-				for (PrintWriter writer : writers) {
-					writer.println("MESSAGE " + name + ": " + input);
+					for (PrintWriter writer : writers) {
+						writer.println("MESSAGE " + name + ": " + input);
+					}
 				}
 			}
 		}
