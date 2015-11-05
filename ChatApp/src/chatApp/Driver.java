@@ -7,7 +7,7 @@ import java.io.IOException;
  */
 public class Driver {
 	private final static String host = "localhost";
-	private final static int port = 8888;
+	private final static int port = 8080;
 	
 	public static void main(String[] args) {
 		try {
