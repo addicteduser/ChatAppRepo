@@ -43,7 +43,7 @@ public class ChatClient {
 
     BufferedReader in;
     PrintWriter out;
-    JFrame frame = new JFrame("Chatter");
+    JFrame frame = new JFrame("ChatApp");
     JTextField textField = new JTextField(40);
     JTextArea messageArea = new JTextArea(8, 40);
     
@@ -142,7 +142,7 @@ public class ChatClient {
                 out.println(getName());
             } else if (line.startsWith("NAMEACCEPTED")) {
                 textField.setEditable(true);
-                frame.setTitle("Chatter   |   @"+tempName);
+                frame.setTitle("ChatApp   |   @"+tempName);
             } else if (line.startsWith("MESSAGE")) {
             	appendToPane(messagePane, line.substring(8) + "\n", Color.BLACK);
             } else if (line.startsWith("PRIVATEMESSAGESENDER")) {
